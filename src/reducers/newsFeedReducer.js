@@ -1,6 +1,14 @@
 /**
  * ニュースデータを格納するステートを呼び出すアクション
  * → アクションが実行されると対応するReducersに定義されたステート更新処理を実行する
+ * ※ src/createStore.jsの「news:」に設定される。
+ *
+ * --------------------
+ * {
+ *   news: newsFeedReducer,
+ *   searchTerm: searchTermReducer
+ * }
+ * --------------------
  */
 import { LOAD_NEWS } from '../actions/actionTypes';
 
