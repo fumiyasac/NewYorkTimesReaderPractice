@@ -1,5 +1,5 @@
 /**
- * containers/newsFeedContainer.jsの役割と機能のまとめ：
+ * containers/NewsFeedContainer.jsの役割と機能のまとめ：
  * 定義したコンポーネントに対してデータやコールバック関数を与える
  */
 
