@@ -31,12 +31,13 @@ export default class Search extends Component {
     this.searchNews = this.searchNews.bind(this);
   }
 
-  //受け取ったテキストの値を
+  //受け取ったテキストの値をthis.props.searchNewsメソッドの引数にして再度実行をする
   searchNews(text) {
     this.setState({ searchText: text });
     this.props.searchNews(text);
   }
 
+  //見た目のレンダリング
   render() {
     return (
       <View style={globalStyles.COMMON_STYLES.pageContainer}>
@@ -49,6 +50,17 @@ export default class Search extends Component {
             placeholderTextColor={globalStyles.MUTED_COLOR}
           />
         </View>
+        {
+          /*
+            ----------
+            表示しているニュースフィードのデータに関して：
+            ----------
+            1. TextInputの値が変更されると'onChangeText属性に設定したsearchNewsメソッドが実行される
+            2. ステート値：searchTextの値が入力した値に更新される ※TextInput内に値は残ったまま
+            3. this.propsに渡されたsearchNews(TextInputの値)メソッドが実行される
+            4. 実行結果はthis.propsfilteredNewsに格納される
+          */
+        }
         <NewsFeed
           news={this.props.filteredNews}
           listStyles={{}}
@@ -60,7 +72,7 @@ export default class Search extends Component {
 }
 
 //デフォルトのprop値の定義
-//searchNews(text)が実行されるとステートの値が更新されてfilteredNewsの値が更新される
+// → searchNews(text)が実行されるとステートの値が更新されてfilteredNewsの値が更新される
 Search.propTypes = {
   filteredNews: PropTypes.arrayOf(PropTypes.object),
   searchNews: PropTypes.func.isRequired

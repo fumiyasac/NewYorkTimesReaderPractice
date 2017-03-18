@@ -29,6 +29,9 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 //コンソールのログ出力をするためのメソッドを使用する
 import createLogger from 'redux-logger';
 
+//reduxの非同期処理用のライブラリを使用する（Promiseパターンで書けるMiddleware）
+import promiseMiddleware from 'redux-promise';
+
 //それぞれのReducer(各々の状態のステート)を使用する
 import newsFeedReducer from './reducers/newsFeedReducer';
 import searchTermReducer from './reducers/searchTermReducer';
@@ -38,6 +41,7 @@ const logger = createLogger();
 
 //ステートの作成をする → Reducerから受け取った値と初期ステート
 // → Reduxアプリケーションのステートとクライアントのステートを組み合わせる
+// → Middlewareの適用も行う（差し込み処理）
 export default (initalState = {}) => (
   //Storeの初期値を作成する
   createStore(
@@ -46,6 +50,6 @@ export default (initalState = {}) => (
       searchTerm: searchTermReducer
     }),
     initalState,
-    applyMiddleware(logger)
+    applyMiddleware(logger, promiseMiddleware)
   )
 );

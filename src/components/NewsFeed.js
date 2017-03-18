@@ -8,7 +8,9 @@ import {
   View,
   Modal,
   TouchableOpacity,
-  WebView
+  WebView,
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native';
 
 //自作コンポーネントのインポート
@@ -34,13 +36,29 @@ export default class NewsFeed extends Component {
     //ステートの定義
     this.state = {
       dataSource: this.ds.cloneWithRows(props.news),
-      modalVisible: false
+      initialLoading: true,
+      modalVisible: false,
+      refreshing: false
     };
 
     //thisの値をバインドをする（このアクションを発火させた際にthis.propsの値を使用するため）
     this.renderRow = this.renderRow.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
     this.onModalOpen = this.onModalOpen.bind(this);
+    this.refresh = this.refresh.bind(this);
+  }
+
+  //コンポーネントがマウントされる前に実行される
+  componentWillMount() {
+    this.refresh();
+  }
+
+  //this.propsの値が更新されたタイミングで実行される
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(nextProps.news),
+      initialLoading: false
+    });
   }
 
   //モーダルを閉じるアクション
@@ -57,6 +75,13 @@ export default class NewsFeed extends Component {
       modalVisible: true,
       modalUrl: url
     });
+  }
+
+  //ニュースデータをリロードして更新する
+  refresh() {
+    if (this.props.loadNews) {
+      this.props.loadNews();
+    }
   }
 
   //モーダルのレンダリングを行う
@@ -98,16 +123,38 @@ export default class NewsFeed extends Component {
 
   //見た目のレンダリング
   render() {
+
+    //this.propsの値を取得する
+    const {
+      listStyles = globalStyles.COMMON_STYLES.pageContainer,
+      showLoadingSpinner
+    } = this.props;
+
+    //ステートの値を取得する
+    const { initialLoading, refreshing, dataSource } = this.state;
+
+    //ローディング中かどうかを判定して、ロード完了の場合にはListViewを表示
     return (
-      <View style={globalStyles.COMMON_STYLES.pageContainer}>
-        <ListView
-          enableEmptySections
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow}
-          style={this.props.listStyles}
-        />
-        {this.renderModal()}
-      </View>
+      (initialLoading && showLoadingSpinner
+        ? (
+          <View style={[listStyles, styles.loadingContainer]}>
+            <ActivityIndicator animating size="small" {...this.props} />
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <ListView
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={this.refresh} />
+              }
+              enableEmptySections
+              dataSource={dataSource}
+              renderRow={this.renderRow}
+              style={listStyles}
+            />
+            {this.renderModal()}
+          </View>
+        )
+      )
     );
   }
 }
@@ -116,37 +163,27 @@ export default class NewsFeed extends Component {
 //ここは変更をしてはいけない場所
 NewsFeed.propTypes = {
   news: PropTypes.arrayOf(PropTypes.object),
-  listStyles: View.propTypes.style
+  listStyles: View.propTypes.style,
+  loadNews: PropTypes.func,
+  showLoadingSpinner: PropTypes.bool
 };
 
 //デフォルトのprop値の定義
 NewsFeed.defaultProps = {
-  news: [
-    {
-      title: 'React Native',
-      imageUrl: 'https://facebook.github.io/react/img/logo_og.png',
-      description: 'Build Native Mobile Apps using JavaScript and React',
-      date: new Date(),
-      author: 'Facebook',
-      location: 'Menlo Park, California',
-      url: 'https://facebook.github.io/react-native'
-    },
-    {
-      title: 'Packt Publishing',
-      imageUrl: 'https://www.packtpub.com/sites/default/files/packt_logo.png',
-      description: 'Stay Relevant',
-      date: new Date(),
-      author: 'Packt Publishing',
-      location: 'Birmingham, UK',
-      url: 'https://www.packtpub.com/'
-    }
-  ]
+  showLoadingSpinner: true
 };
 
 //このコンポーネント内で使用するスタイル定義
 const styles = StyleSheet.create({
   newsItem: {
     marginBottom: 20
+  },
+  container: {
+    flex: 1
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   modalContent: {
     flex: 1,
