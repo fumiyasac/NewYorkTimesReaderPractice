@@ -8,7 +8,7 @@
 import { connect } from 'react-redux';
 
 //dispatchとActionCreatorの関連付け用のメソッドのインポート
-import { bindActionCreators } form 'redux';
+import { bindActionCreators } from 'redux';
 
 //ActionCreatorのインポート（今回使用するのはデータ取得処理実行メソッド：loadNews）
 import { loadNews } from '../actions/newsActions';
@@ -16,11 +16,15 @@ import { loadNews } from '../actions/newsActions';
 //自作コンポーネント：NewsFeedのインポート
 import NewsFeed from '../components/NewsFeed';
 
+//セレクターから表示しているニュースデータを取得するメソッド：allNewsSelectorのインポート
+import { allNewsSelector } from '../selectors/newsSelectors';
+
 //ステートから値をコンポーネント側のpropsとの関連付けを行う
 // → 「propsを通して取得する際に使う名前: Storeのstateの値」の形になる
 // ※ Storeのステートの定義についてはsrc/createStore.jsを参照
+// ステートの値はallNewsSelectorを通して整形する
 const mapStateToProps = state => ({
-  news: state.news
+  news: allNewsSelector(state)
 });
 
 //データ取得処理実行メソッド：loadNewsをコンポーネント側のpropsとの関連付けを行う

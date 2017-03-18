@@ -15,6 +15,20 @@ export const loadNews = () => ({
   payload: mockData
 });
 
+/*
+//APIキー
+import API_KEY from '../config/apiKey';
+
+//NewYorkTimesのニュースデータ一覧を取得する（引数なし）
+export const loadNews = () => {
+  const req = fetch(`https://api.nytimes.com/svc/topstories/v2/technology.json?api-key=${API_KEY}`);
+  return {
+    type: LOAD_NEWS,
+    payload: req.then(response => response.json())
+  };
+};
+*/
+
 //NewYorkTimesのニュースデータを検索する（引数：searchTerm）
 export const searchNews = searchTerm => ({
   type: SEARCH_NEWS,
