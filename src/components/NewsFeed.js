@@ -87,22 +87,12 @@ export default class NewsFeed extends Component {
   //モーダルのレンダリングを行う
   renderModal() {
     return (
-      <Modal
-        animationType="slide"
-        visible={this.state.modalVisible}
-        onRequestClose={this.onModalClose}
-      >
+      <Modal animationType="slide" visible={this.state.modalVisible} onRequestClose={this.onModalClose}>
         <View style={styles.modalContent}>
-          <TouchableOpacity
-            onPress={this.onModalClose}
-            style={styles.closeButton}
-          >
+          <TouchableOpacity onPress={this.onModalClose} style={styles.closeButton}>
             <SmallText>Close</SmallText>
           </TouchableOpacity>
-          <WebView
-            scalesPageToFit
-            source={{ uri: this.state.modalUrl }}
-          />
+          <WebView scalesPageToFit source={{ uri: this.state.modalUrl }} />
         </View>
       </Modal>
     );
