@@ -11,7 +11,7 @@ import {
 import AppText from './AppText';
 
 //FunctionalComponentの定義
-//AppTextのスタイル設定
+//AppTextのコンポーネント設定
 const SmallText = ({ children, style, ...rest }) => (
   <AppText style={[styles.small, style]} {...rest}>
     {children}
