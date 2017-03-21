@@ -7,7 +7,7 @@ import {
   StatusBar
 } from 'react-native';
 
-//自作コンポーネントのインポート
+//自作コンポーネントに対応するコンテナのインポート
 import NewsFeedContainer from '../containers/NewsFeedContainer';
 import SearchContainer from '../containers/SearchContainer';
 
