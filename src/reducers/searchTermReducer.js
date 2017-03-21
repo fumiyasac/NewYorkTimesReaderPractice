@@ -6,7 +6,8 @@
  * --------------------
  * {
  *   news: newsFeedReducer,
- *   searchTerm: searchTermReducer
+ *   searchTerm: searchTermReducer,
+ *   navigation: navigationReducer
  * }
  * --------------------
  */

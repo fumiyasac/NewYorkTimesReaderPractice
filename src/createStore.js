@@ -47,7 +47,8 @@ export default (initalState = {}) => (
   createStore(
     combineReducers({
       news: newsFeedReducer,
-      searchTerm: searchTermReducer
+      searchTerm: searchTermReducer,
+      navigation: navigationReducer
     }),
     initalState,
     applyMiddleware(logger, promiseMiddleware)
