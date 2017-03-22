@@ -23,7 +23,7 @@ StatusBar.setBarStyle('light-content');
 //IntroScreenのスタイル設定
 const IntroScreen = ({ push }) => (
   <View style={[globalStyles.COMMON_STYLES.pageContainer, styles.container]}>
-    <TouchableOpacity onPress={() => push('onboardsing')}>
+    <TouchableOpacity onPress={() => push('onboarding')}>
       <Title>
         React Native News Reader
       </Title>
