@@ -65,33 +65,26 @@ const initialState = {
 
 //遷移元・遷移先や現在表示しているコンポーネントの状態に関する情報をステートに格納する
 export default (state = initialState, action = {}) => {
-  switch (action.type) {
-    case NAVIGATION_PUSH:
-      //引き渡されたキーに対応する画面へ遷移する（home/intro/onboardingのいずれか）
-      return StateUtils.push(state, routes[action.payload]);
-    case NAVIGATION_POP:
-      //前の画面へ遷移する
-      return StateUtils.pop(state);
-    case NAVIGATION_TAB:
-      //HomeScreenで定義した画面のいずれかに遷移する('newsFeed','search','bookmarks')
-      const homeState = StateUtils.get(state, 'home');
-      const updatedHomeState = StateUtils.jumpTo(homeState, action.payload);
-      return StateUtils.replaceAt(state, 'home', updatedHomeState);
-    case NAVIGATION_OPEN_MODAL:
-      //モーダルをアクティブにする
-      const homeState = StateUtils.get(state, 'home');
-      const openTabState = homeState.routes[homeState.index];
-      const updatedTabState = { ...openTabState, modal: action.payload };
-      const updatedHomeState = StateUtils.replaceAt(homeState, openTabState.key, updatedTabState);
-      return StateUtils.replaceAt(state, 'home', updatedHomeState);
-    case NAVIGATION_OPEN_MODAL:
-      //モーダルを非アクティブにする
-      const homeState = StateUtils.get(state, 'home');
-      const openTabState = homeState.routes[homeState.index];
-      const updatedTabState = { ...openTabState, modal: undefined };
-      const updatedHomeState = StateUtils.replaceAt(homeState, openTabState.key, updatedTabState);
-      return StateUtils.replaceAt(state, 'home', updatedHomeState);
-    default:
-      return state;
+  if (action.type === NAVIGATION_PUSH) {
+    return StateUtils.push(state, routes[action.payload]);
+  } else if (action.type === NAVIGATION_POP) {
+    return StateUtils.pop(state);
+  } else if (action.type === NAVIGATION_TAB) {
+    const homeState = StateUtils.get(state, 'home');
+    const updatedHomeState = StateUtils.jumpTo(homeState, action.payload);
+    return StateUtils.replaceAt(state, 'home', updatedHomeState);
+  } else if (action.type === NAVIGATION_OPEN_MODAL) {
+    const homeState = StateUtils.get(state, 'home');
+    const openTabState = homeState.routes[homeState.index];
+    const updatedTabState = { ...openTabState, modal: action.payload };
+    const updatedHomeState = StateUtils.replaceAt(homeState, openTabState.key, updatedTabState);
+    return StateUtils.replaceAt(state, 'home', updatedHomeState);
+  } else if (action.type === NAVIGATION_CLOSE_MODAL) {
+    const homeState = StateUtils.get(state, 'home');
+    const openTabState = homeState.routes[homeState.index];
+    const updatedTabState = { ...openTabState, modal: undefined };
+    const updatedHomeState = StateUtils.replaceAt(homeState, openTabState.key, updatedTabState);
+    return StateUtils.replaceAt(state, 'home', updatedHomeState);
   }
+  return state;
 };

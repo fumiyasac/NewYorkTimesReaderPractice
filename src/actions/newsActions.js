@@ -6,16 +6,13 @@
 //アクションタイプ定義を呼び出す
 import { LOAD_NEWS, LOAD_NEWS_MOCK, SEARCH_NEWS } from './actionTypes';
 
-//APIキー
+//APIキーを呼び出す
 import API_KEY from '../config/apiKey';
 
-//モックデータの読み込み
+//モックデータになるNewYorkTimesのニュースデータ一覧を取得する（引数なし）
 /*
 import mockData from '../mockData.json';
-*/
 
-//NewYorkTimesのニュースデータ一覧を取得する（引数なし）
-/*
 export const loadNews = () => ({
   type: LOAD_NEWS,
   payload: mockData
