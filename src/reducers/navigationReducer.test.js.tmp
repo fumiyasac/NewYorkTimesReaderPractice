@@ -1,0 +1,6 @@
+import { NAVIGATION_PUSH, NAVIGATION_POP, NAVIGATION_TAB, NAVIGATION_OPEN_MODAL, NAVIGATION_CLOSE_MODAL } from '../actions/actionTypes';
+import navigationReducer from './navigationReducer';
+
+describe('navigationReducerに関連するテスト', () => {
+  //
+});
