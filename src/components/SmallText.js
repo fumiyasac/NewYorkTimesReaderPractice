@@ -11,15 +11,20 @@ import {
 import AppText from './AppText';
 
 //FunctionalComponentの定義
-//AppTextのコンポーネント設定
-const SmallText = ({ children, style, ...rest }) => (
+/**
+ * SmallTextの設定
+ * 引数の一覧 →
+ * style: スタイル,
+ * children: 表示する文字列,
+ * ...rest: その他オプションを定義 ※要素を分解して入れる
+ */
+const SmallText = ({ style, children, ...rest }) => (
   <AppText style={[styles.small, style]} {...rest}>
     {children}
   </AppText>
 );
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 SmallText.propTypes = {
   style: Text.propTypes.style,
   children: PropTypes.node

@@ -9,7 +9,14 @@ import {
 import Title from './Title';
 
 //FunctionalComponentの定義
-//サムネイル表示用のView
+/**
+ * Thumbnailの設定
+ * 引数の一覧 →
+ * style: スタイル,
+ * titleText: タイトルの文字列,
+ * accentColor: Webカラーコード,
+ * url: 画像へのURL
+ */
 const Thumbnail = ({ style, titleText, accentColor, url }) => {
 
   //表示画像のスタイル定義
@@ -23,6 +30,7 @@ const Thumbnail = ({ style, titleText, accentColor, url }) => {
   //見た目のレンダリングを行う
   return (
     <View style={[styles.container, { borderColor: accentColor }, style]}>
+      {/* urlが空の場合とそうでない場合の条件分岐をする */}
       {url.length > 0 ? (
         <Image style={[styles.image, imageStyle]} source={{ uri: url }}>
           {TitleComponent}
@@ -36,8 +44,7 @@ const Thumbnail = ({ style, titleText, accentColor, url }) => {
   );
 };
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 Thumbnail.propTypes = {
   style: View.propTypes.style,
   url: PropTypes.string.isRequired,

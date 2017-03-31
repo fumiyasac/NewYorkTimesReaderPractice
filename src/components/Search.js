@@ -71,7 +71,7 @@ export default class Search extends Component {
   }
 }
 
-//デフォルトのprop値の定義
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 // → searchNews(text)が実行されるとステートの値が更新されてfilteredNewsの値が更新される
 Search.propTypes = {
   filteredNews: PropTypes.arrayOf(PropTypes.object),

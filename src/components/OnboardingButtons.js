@@ -15,13 +15,21 @@ import LinkButton from './LinkButton';
 import { LIGHT_OVERLAY_COLOR } from '../styles/global';
 
 //FunctionalComponentの定義
-//IntroScreenのスタイル設定
+/**
+ * OnboardingButtonsの設定
+ * 引数の一覧 →
+ * totalItems: ◯◯◯,
+ * currentIndex: ◯◯◯,
+ * movePrevious: ◯◯◯,
+ * moveNext: ◯◯◯,
+ * moveFinal: ◯◯◯
+ */
 const OnboardingButtons = ({ totalItems, currentIndex, movePrevious, moveNext, moveFinal }) => (
   <View style={styles.container}>
     <LinkButton onPress={movePrevious} active={currentIndex > 0}>
       Previous
     </LinkButton>
-    {/* 現在のIndex値を元にボタンを出し分け (this.propsからの値を反映する)) */}
+    {/* 現在のIndex値を元にボタンを出し分け (this.propsからの値を反映する) */}
     {currentIndex === totalItems - 1 ? (
       <Button onPress={moveFinal}>
         Done

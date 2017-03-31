@@ -14,15 +14,19 @@ import AppText from './AppText';
 import * as globalStyles from '../styles/global';
 
 //FunctionalComponentの定義
-//AppTextのスタイル設定
+/**
+ * Titleの設定
+ * 引数の一覧 →
+ * style: スタイル,
+ * children: 表示する文字列
+ */
 const Title = ({ style, children }) => (
   <AppText style={[styles.title, style]}>
     {children}
   </AppText>
 );
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 Title.propTypes = {
   style: Text.propTypes.style,
   children: PropTypes.node

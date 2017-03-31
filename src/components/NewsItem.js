@@ -62,24 +62,11 @@ export default class NewsItem extends Component {
 
     //表示される画面を作成する
     return (
-      <TouchableOpacity
-        style={style}
-        onLongPress={this.onLongPress}
-        onPress={onPress}
-      >
+      <TouchableOpacity style={style} onLongPress={this.onLongPress} onPress={onPress}>
         <View>
-          <Thumbnail
-            url={imageUrl}
-            titleText={title}
-            accentColor={accentColor}
-            style={styles.thumbnail}
-          />
+          <Thumbnail url={imageUrl} titleText={title} accentColor={accentColor} style={styles.thumbnail} />
           <View style={styles.content}>
-            <Byline
-              author={author}
-              date={date}
-              location={location}
-            />
+            <Byline author={author} date={date} location={location} />
             <AppText>
               {description}
             </AppText>
@@ -90,8 +77,7 @@ export default class NewsItem extends Component {
   }
 }
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 NewsItem.propTypes = {
   imageUrl: PropTypes.string,
   title: PropTypes.string.isRequired,

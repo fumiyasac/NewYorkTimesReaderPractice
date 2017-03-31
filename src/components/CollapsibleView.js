@@ -8,8 +8,14 @@ import {
 } from 'react-native';
 
 //FunctionalComponentの定義
-//汎用ボタンの定義(スタイル・表示する文字列・表示の切り替えフラグを定義)
-const CollapsibleView = ({ children, style, hide }) => (
+/**
+ * CollapsibleViewの設定
+ * 引数の一覧 →
+ * style: スタイル,
+ * children: 表示する文字列,
+ * hide: 表示・非表示用のフラグ
+ */
+const CollapsibleView = ({ style, children, hide }) => (
   <View style={[styles.container, hide ? styles.hidden : {}]}>
     <View style={[styles.absoluteContainer, style]}>
       {children}
@@ -17,8 +23,7 @@ const CollapsibleView = ({ children, style, hide }) => (
   </View>
 );
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 CollapsibleView.propTypes = {
   style: View.propTypes.style,
   hide: PropTypes.bool.isRequired,

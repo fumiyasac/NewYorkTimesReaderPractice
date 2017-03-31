@@ -1,5 +1,5 @@
 /**
- * 日付・著者の表示部分
+ * 日付・著者の表示部分のコンポーネント
  */
 import React, { PropTypes } from 'react';
 import {
@@ -14,7 +14,13 @@ import SmallText from './SmallText';
 import * as globalStyles from '../styles/global';
 
 //FunctionalComponentの定義
-//日付・著者の表示部分のコンポーネント設定
+/**
+ * Bylineの設定
+ * 引数の一覧 →
+ * date: 日付の文字列,
+ * author: 著者の文字列,
+ * location: ロケーションの文字列
+ */
 const Byline = ({ date, author, location }) => (
   <View>
     <View style={styles.row}>
@@ -37,8 +43,7 @@ const Byline = ({ date, author, location }) => (
   </View>
 );
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 Byline.propTypes = {
   date: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,

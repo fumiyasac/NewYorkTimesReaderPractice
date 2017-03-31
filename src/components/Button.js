@@ -1,5 +1,5 @@
 /**
- * ボタン用のコンポーネント
+ * 汎用ボタン用のコンポーネント
  */
 import React, { PropTypes } from 'react';
 import {
@@ -16,8 +16,16 @@ const TEXT_COLOR = '#fff';
 const DISABLED_COLOR = `${TEXT_COLOR}5`;
 
 //FunctionalComponentの定義
-//汎用ボタンの定義(スタイルや活性フラグ・押下時のアクション・表示する文字列・その他オプションを定義)
-const Button = ({ style, active, onPress, children, ...rest }) => (
+/**
+ * Buttonの設定
+ * 引数の一覧 →
+ * style: スタイル,
+ * children: 表示する文字列,
+ * ...rest: その他オプションを定義 ※要素を分解して入れる,
+ * active: 活性フラグ,
+ * onPress: 押下時のアクション
+ */
+const Button = ({ style, children, ...rest, active, onPress }) => (
   <TouchableOpacity
     activeOpacity={active ? 0.7 : 1}
     onPress={active ? onPress : null}
@@ -30,8 +38,7 @@ const Button = ({ style, active, onPress, children, ...rest }) => (
   </TouchableOpacity>
 );
 
-//このコンポーネントのpropTypesの定義
-//ここは変更をしてはいけない場所
+//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 Button.propTypes = {
   active: PropTypes.bool,
   style: View.propTypes.style,
