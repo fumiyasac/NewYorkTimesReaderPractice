@@ -1,32 +1,26 @@
-/**
- * 最初の画面表示部分
- */
 import React, { PropTypes } from 'react';
 import {
   View,
   TouchableOpacity,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native';
-
-//自作コンポーネントのインポート
 import Title from './Title';
 import AppText from './AppText';
-
-//共通定義のスタイルシートのコンポーネント
 import * as globalStyles from '../styles/global';
 
-//ステータスバーの表示設定
-StatusBar.setBarStyle('light-content');
+// Set the status bar for iOS to light
+if (Platform.OS === 'ios') {
+  StatusBar.setBarStyle('light-content');
+}
 
-//FunctionalComponentの定義
-//IntroScreenのスタイル設定
 const IntroScreen = ({ push }) => (
   <View style={[globalStyles.COMMON_STYLES.pageContainer, styles.container]}>
-    <TouchableOpacity onPress={() => push('onboarding')}>
-      <Title>
-        React Native News Reader
-      </Title>
+    <TouchableOpacity
+      onPress={() => push('onboarding')}
+    >
+      <Title>React Native News Reader</Title>
       <AppText>
         Start Reading
       </AppText>
@@ -34,15 +28,15 @@ const IntroScreen = ({ push }) => (
   </View>
 );
 
-//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 IntroScreen.propTypes = {
   push: PropTypes.func.isRequired
 };
 
-//このコンポーネント内で使用するスタイル定義
 const styles = StyleSheet.create({
   container: {
+    marginTop: 0,
     marginBottom: 0,
+    marginHorizontal: 0,
     justifyContent: 'center',
     alignItems: 'center'
   }

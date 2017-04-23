@@ -1,69 +1,62 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import {
   TabBarIOS,
-  Text,
-  Alert,
-  Vibration,
   StatusBar
 } from 'react-native';
-
-//自作コンポーネントに対応するコンテナのインポート
+import Icon from 'react-native-vector-icons/EvilIcons';
 import NewsFeedContainer from '../containers/NewsFeedContainer';
 import SearchContainer from '../containers/SearchContainer';
-
-//共通定義のスタイルシートのコンポーネント
+import BookmarksContainer from '../containers/BookmarksContainer';
+import Profile from './Profile';
 import * as globalStyles from '../styles/global';
 
-//ステータスバーの表示設定
+// Set the status bar for iOS to light
 StatusBar.setBarStyle('light-content');
 
-//ClassComponentの定義
-//一番最初に表示される画面のコンポーネントs設定
-export default class HomeScreen extends Component {
+const HomeScreen = ({ selectedTab, tab }) => (
+  <TabBarIOS
+    barTintColor={globalStyles.BAR_COLOR}
+    tintColor={globalStyles.LINK_COLOR}
+    translucent={false}
+  >
+    <Icon.TabBarItemIOS
+      iconName={'star'}
+      title={'News'}
+      selected={selectedTab === 'newsFeed'}
+      onPress={() => tab('newsFeed')}
+    >
+      <NewsFeedContainer />
+    </Icon.TabBarItemIOS>
+    <Icon.TabBarItemIOS
+      iconName={'search'}
+      title={'Search'}
+      selected={selectedTab === 'search'}
+      onPress={() => tab('search')}
+    >
+      <SearchContainer />
+    </Icon.TabBarItemIOS>
+    <Icon.TabBarItemIOS
+      iconName={'paperclip'}
+      title={'Bookmarks'}
+      selected={selectedTab === 'bookmarks'}
+      onPress={() => tab('bookmarks')}
+    >
+      <BookmarksContainer />
+    </Icon.TabBarItemIOS>
+    <Icon.TabBarItemIOS
+      iconName={'user'}
+      title={'Profile'}
+      selected={selectedTab === 'profile'}
+      onPress={() => tab('profile')}
+    >
+      <Profile />
+    </Icon.TabBarItemIOS>
+  </TabBarIOS>
+);
 
-  //コンストラクタ
-  constructor(props) {
-    super(props);
+HomeScreen.propTypes = {
+  selectedTab: PropTypes.string,
+  tab: PropTypes.func.isRequired
+};
 
-    //ステートの定義
-    this.state = {
-      tab: 'newsFeed'
-    };
-  }
-
-  //アラートを表示させる(Work in Progress...)
-  // → Alert.alert('タイトル', '表示する詳細文言', [{ text: 'ボタンのテキスト', onPress: () => 内部処理をごにょごにょ... }, ... ]);
-  showBookmarkAlert() {
-    Vibration.vibrate();
-    Alert.alert(
-      'Coming Soon!',
-      'We\'re hard at work on this feature, check back in the near future.',
-      [{ text: 'OK', onPress: () => console.log('User pressed OK') }]
-    );
-  }
-
-  //見た目のレンダリング
-  render() {
-    return (
-      <TabBarIOS barTintColor={globalStyles.BAR_COLOR} tintColor={globalStyles.LINK_COLOR} translucent={false}>
-        {
-          /*
-            ----------
-            タブバーの表示について：
-            ----------
-            selected属性の値で表示・非表示のハンドリングを行う（切り替えた際はステートの値も更新する）
-          */
-        }
-        <TabBarIOS.Item systemIcon={'featured'} selected={this.state.tab === 'newsFeed'} onPress={() => this.setState({ tab: 'newsFeed' })}>
-          <NewsFeedContainer />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item systemIcon={'search'} selected={this.state.tab === 'search'} onPress={() => this.setState({ tab: 'search' })}>
-          <SearchContainer />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item systemIcon={'bookmarks'} selected={this.state.tab === 'bookmarks'} onPress={() => this.showBookmarkAlert()}>
-          <Text>Bookmarks</Text>
-        </TabBarIOS.Item>
-      </TabBarIOS>
-    );
-  }
-}
+export default HomeScreen;

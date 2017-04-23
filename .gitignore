@@ -37,7 +37,7 @@ npm-debug.log
 yarn-error.log
 
 # projects
-src/config/apiKey.js
+src/config/nytApiKey.js
 
 # BUCK
 buck-out/

@@ -1,49 +1,53 @@
-/**
- * ニュース単体表示部分
- */
 import React, { Component, PropTypes } from 'react';
 import {
-    View,
-    TouchableOpacity,
-    StyleSheet,
-    ActionSheetIOS
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ActionSheetIOS,
+  ToastAndroid,
+  Platform,
+  Vibration
 } from 'react-native';
-
-//自作コンポーネントのインポート
 import Byline from './Byline';
 import AppText from './AppText';
 import Thumbnail from './Thumbnail';
-
-//共通定義のスタイルシートのコンポーネント
 import * as globalStyles from '../styles/global';
 
-//ClassComponentの定義
-//ニュース単体表示部分のコンポーネント設定
 export default class NewsItem extends Component {
 
-  //コンストラクタ
   constructor(props) {
     super(props);
 
-    //thisの値をバインドをする（このアクションを発火させた際にthis.propsの値を使用するため）
     this.onLongPress = this.onLongPress.bind(this);
   }
 
-  //長押しした際のアクション
   onLongPress() {
+    const platformMsgFn = Platform.select({
+      android: () => {
+        ToastAndroid.show(
+          `"${this.props.title}" has been bookmarked!`,
+          ToastAndroid.LONG
+        );
+        Vibration.vibrate();
+        this.props.onBookmark();
+      },
+      ios: () => (
+        ActionSheetIOS.showActionSheetWithOptions({
+          options: ['Bookmark', 'Cancel'],
+          cancelButtonIndex: 1,
+          title: this.props.title
+        }, (buttonIndex) => {
+          if (buttonIndex === 0) {
+            this.props.onBookmark();
+          }
+        })
+      )
+    });
 
-    //アクションシートの表示をする
-    ActionSheetIOS.showActionSheetWithOptions({
-      options: ['Bookmark', 'Cancel'],
-      cancelButtonIndex: 1,
-      title: this.props.title
-    }, buttonIndex => console.log('Button selected', buttonIndex));
+    platformMsgFn();
   }
 
-  //見た目のレンダリング
   render() {
-
-    //this.propsの値をオブジェクトに格納する
     const {
       style,
       imageUrl,
@@ -54,19 +58,28 @@ export default class NewsItem extends Component {
       description,
       onPress
     } = this.props;
-
-    //色の表示を決定する
     const accentColor = globalStyles.ACCENT_COLORS[
       this.props.index % globalStyles.ACCENT_COLORS.length
     ];
-
-    //表示される画面を作成する
     return (
-      <TouchableOpacity style={style} onLongPress={this.onLongPress} onPress={onPress}>
+      <TouchableOpacity
+        style={style}
+        onLongPress={this.onLongPress}
+        onPress={onPress}
+      >
         <View>
-          <Thumbnail url={imageUrl} titleText={title} accentColor={accentColor} style={styles.thumbnail} />
+          <Thumbnail
+            url={imageUrl}
+            titleText={title}
+            accentColor={accentColor}
+            style={styles.thumbnail}
+          />
           <View style={styles.content}>
-            <Byline author={author} date={date} location={location} />
+            <Byline
+              author={author}
+              date={date}
+              location={location}
+            />
             <AppText>
               {description}
             </AppText>
@@ -77,7 +90,6 @@ export default class NewsItem extends Component {
   }
 }
 
-//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 NewsItem.propTypes = {
   imageUrl: PropTypes.string,
   title: PropTypes.string.isRequired,
@@ -87,10 +99,10 @@ NewsItem.propTypes = {
   location: PropTypes.string,
   index: PropTypes.number.isRequired,
   onPress: PropTypes.func.isRequired,
-  style: View.propTypes.style
+  style: View.propTypes.style,
+  onBookmark: PropTypes.func.isRequired
 };
 
-//このコンポーネント内で使用するスタイル定義
 const styles = StyleSheet.create({
   thumbnail: {
     marginBottom: 5

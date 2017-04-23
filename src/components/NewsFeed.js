@@ -1,6 +1,3 @@
-/**
- * ニュース全体表示部分
- */
 import React, { PropTypes, Component } from 'react';
 import {
   ListView,
@@ -10,50 +7,42 @@ import {
   TouchableOpacity,
   WebView,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  NetInfo,
+  Linking
 } from 'react-native';
-
-//自作コンポーネントのインポート
 import NewsItem from './NewsItem';
 import SmallText from './SmallText';
-
-//共通定義のスタイルシートのコンポーネント
+import AppText from './AppText';
 import * as globalStyles from '../styles/global';
 
-//ClassComponentの定義
-//ニュース全体表示部分のコンポーネント設定
 export default class NewsFeed extends Component {
 
-  //コンストラクタ
   constructor(props) {
     super(props);
-
-    //ListView用のdataSourceの定義
     this.ds = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1.title !== row2.title
     });
-
-    //ステートの定義
     this.state = {
       dataSource: this.ds.cloneWithRows(props.news),
       initialLoading: true,
       modalVisible: false,
-      refreshing: false
+      refreshing: false,
+      connected: true
     };
 
-    //thisの値をバインドをする（このアクションを発火させた際にthis.propsの値を使用するため）
     this.renderRow = this.renderRow.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
     this.onModalOpen = this.onModalOpen.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.handleConnectivityChange = this.handleConnectivityChange.bind(this);
   }
 
-  //コンポーネントがマウントされる前に実行される
   componentWillMount() {
+    NetInfo.isConnected.addEventListener('change', this.handleConnectivityChange);
     this.refresh();
   }
 
-  //this.propsの値が更新されたタイミングで実行される
   componentWillReceiveProps(nextProps) {
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(nextProps.news),
@@ -61,7 +50,10 @@ export default class NewsFeed extends Component {
     });
   }
 
-  //モーダルを閉じるアクション
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('change', this.handleConnectivityChange);
+  }
+
   onModalClose() {
     this.setState({
       modalVisible: false,
@@ -69,7 +61,6 @@ export default class NewsFeed extends Component {
     });
   }
 
-  //モーダルを開くアクション
   onModalOpen(url) {
     this.setState({
       modalVisible: true,
@@ -77,33 +68,56 @@ export default class NewsFeed extends Component {
     });
   }
 
-  //ニュースデータをリロードして更新する
-  refresh() {
-    if (this.props.loadNews) {
-      this.props.loadNews();
+  handleConnectivityChange(isConnected) {
+    this.setState({
+      connected: isConnected
+    });
+    if (isConnected) {
+      this.refresh();
     }
   }
 
-  //モーダルのレンダリングを行う
+  refresh() {
+    if (this.props.load) {
+      this.props.load();
+    }
+  }
+
   renderModal() {
     return (
-      <Modal animationType="slide" visible={this.state.modalVisible} onRequestClose={this.onModalClose}>
+      <Modal
+        animationType="slide"
+        visible={this.props.modal !== undefined}
+        onRequestClose={this.props.onModalClose}
+      >
         <View style={styles.modalContent}>
-          <TouchableOpacity onPress={this.onModalClose} style={styles.closeButton}>
-            <SmallText>Close</SmallText>
-          </TouchableOpacity>
-          <WebView scalesPageToFit source={{ uri: this.state.modalUrl }} />
+          <View style={styles.modalButtons}>
+            <TouchableOpacity
+              onPress={this.props.onModalClose}
+            >
+              <SmallText>Close</SmallText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => Linking.openURL(this.props.modal)}
+            >
+              <SmallText>Open in Browser</SmallText>
+            </TouchableOpacity>
+          </View>
+          <WebView
+            scalesPageToFit
+            source={{ uri: this.props.modal }}
+          />
         </View>
       </Modal>
     );
   }
 
-  //ListViewにデータを入れる
   renderRow(rowData, ...rest) {
     const index = parseInt(rest[1], 10);
     return (
       <NewsItem
-        onPress={() => this.onModalOpen(rowData.url)}
+        onPress={() => this.props.onModalOpen(rowData.url)}
+        onBookmark={() => this.props.addBookmark(rowData.url)}
         style={styles.newsItem}
         index={index}
         {...rowData}
@@ -111,30 +125,41 @@ export default class NewsFeed extends Component {
     );
   }
 
-  //見た目のレンダリング
   render() {
-
-    //this.propsの値を取得する
     const {
       listStyles = globalStyles.COMMON_STYLES.pageContainer,
       showLoadingSpinner
     } = this.props;
-
-    //ステートの値を取得する
     const { initialLoading, refreshing, dataSource } = this.state;
 
-    //ローディング中かどうかを判定して、ロード完了の場合にはListViewを表示
+    if (!this.state.connected) {
+      return (
+        <View style={[globalStyles.COMMON_STYLES.pageContainer, styles.loadingContainer]}>
+          <AppText>
+            No Connection
+          </AppText>
+        </View>
+      );
+    }
+
     return (
       (initialLoading && showLoadingSpinner
         ? (
           <View style={[listStyles, styles.loadingContainer]}>
-            <ActivityIndicator animating size="small" {...this.props} />
+            <ActivityIndicator
+              animating
+              size="small"
+              {...this.props}
+            />
           </View>
         ) : (
           <View style={styles.container}>
             <ListView
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={this.refresh} />
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={this.refresh}
+                />
               }
               enableEmptySections
               dataSource={dataSource}
@@ -149,20 +174,21 @@ export default class NewsFeed extends Component {
   }
 }
 
-//このコンポーネントのpropTypes(this.propsで受け取れる情報に関するもの)定義
 NewsFeed.propTypes = {
   news: PropTypes.arrayOf(PropTypes.object),
   listStyles: View.propTypes.style,
-  loadNews: PropTypes.func,
-  showLoadingSpinner: PropTypes.bool
+  load: PropTypes.func,
+  showLoadingSpinner: PropTypes.bool,
+  modal: PropTypes.string,
+  onModalOpen: PropTypes.func.isRequired,
+  onModalClose: PropTypes.func.isRequired,
+  addBookmark: PropTypes.func.isRequired
 };
 
-//デフォルトのprop値の定義
 NewsFeed.defaultProps = {
   showLoadingSpinner: true
 };
 
-//このコンポーネント内で使用するスタイル定義
 const styles = StyleSheet.create({
   newsItem: {
     marginBottom: 20
@@ -180,9 +206,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: globalStyles.BG_COLOR
   },
-  closeButton: {
+  modalButtons: {
     paddingVertical: 5,
     paddingHorizontal: 10,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });

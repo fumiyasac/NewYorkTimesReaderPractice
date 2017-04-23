@@ -1,7 +1,8 @@
-//スタイルの外部インポート（共通のスタイル定義）
 import { StyleSheet } from 'react-native';
+import platformStyles from './platform';
 
-//共通の配色に関するスタイルシート
+const { PAGE_CONTAINER_STYLE, TEXT_STYLE } = platformStyles;
+
 export const BG_COLOR = '#343336';
 export const BAR_COLOR = '#4e4d52';
 export const TEXT_COLOR = '#e5dbda';
@@ -9,20 +10,16 @@ export const HEADER_TEXT_COLOR = '#fff';
 export const MUTED_COLOR = '#8e8786';
 export const LINK_COLOR = '#48e9d9';
 export const ACCENT_COLORS = ['#d31d65', '#751c53', '#c248c0', '#7d6e8b', '#bbc6f7'];
+export const LIGHT_OVERLAY_COLOR = '#fff2';
 
-//ページ表示用のコンテナのスタイルを定義する（パーツに関する定義はこんな感じでしておくと良い）
 export const COMMON_STYLES = StyleSheet.create({
   pageContainer: {
     backgroundColor: BG_COLOR,
     flex: 1,
-    marginTop: 0,
-    paddingTop: 20,
-    marginBottom: 48,
-    marginHorizontal: 0,
-    paddingHorizontal: 10
+    ...PAGE_CONTAINER_STYLE
   },
   text: {
     color: TEXT_COLOR,
-    fontFamily: 'Helvetica Neue'
+    ...TEXT_STYLE
   }
 });

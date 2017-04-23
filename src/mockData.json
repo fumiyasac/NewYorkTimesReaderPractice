@@ -2,7 +2,7 @@
   "results": [
     {
       "title": "React Native",
-      "abstract": "Build Native Mobile Apps using Javascript and React.",
+      "abstract": "Build Native Mobile Apps using JavaScript and React",
       "url": "https://facebook.github.io/react-native",
       "byline": "By Facebook",
       "published_date": "2016-05-20T00:00:00-5:00",
@@ -18,7 +18,7 @@
     },
     {
       "title": "Packt Publishing",
-      "abstract": "Stay Relevant.",
+      "abstract": "Stay Relevant",
       "url": "https://www.packtpub.com/",
       "byline": "By Packt Publishing",
       "published_date": "2016-05-20T00:00:00-5:00",
@@ -27,7 +27,7 @@
       ],
       "multimedia": [
         {
-          "url": "https://facebook.github.io/react/img/logo_og.png",
+          "url": "https://www.packtpub.com/sites/default/files/packt_logo.png",
           "format": "thumbLarge"
         }
       ]

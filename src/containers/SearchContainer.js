@@ -1,39 +1,31 @@
-/**
- * containers/SearchContainer.jsの役割と機能のまとめ：
- * 定義したコンポーネントに対してデータやコールバック関数を与える
- */
-
-//connectのインポート宣言
-// → connectを用いてstoreを該当コンポーネントのpropsで使用可能にする
+import { NavigationExperimental } from 'react-native';
 import { connect } from 'react-redux';
-
-//dispatchとActionCreatorの関連付け用のメソッドのインポート
 import { bindActionCreators } from 'redux';
-
-//ActionCreatorのインポート（今回使用するのはデータ検索結果取得処理実行メソッド：searchNews）
 import { searchNews } from '../actions/newsActions';
-
-//自作コンポーネント：Searchのインポート
+import { openModal, closeModal } from '../actions/navigationActions';
+import { addBookmark } from '../actions/bookmarkActions';
 import Search from '../components/Search';
-
-//セレクターから表示しているニュースデータを取得するメソッド：searchNewsSelectorのインポート
 import { searchNewsSelector } from '../selectors/newsSelectors';
 
-//ステートから値をコンポーネント側のpropsとの関連付けを行う
-// → 「propsを通して取得する際に使う名前: Storeのstateの値」の形になる
-// ※ Storeのステートの定義についてはsrc/createStore.jsを参照
-const mapStateToProps = state => ({
-  filteredNews: searchNewsSelector(state)
-});
+const { StateUtils } = NavigationExperimental;
 
-//データ取得処理実行メソッド：searchNewsをコンポーネント側のpropsとの関連付けを行う
- // → dispatchはactionを指定してstoreのstateを更新する役目
+const mapStateToProps = (state) => {
+  const homeState = StateUtils.get(state.navigation, 'home');
+  const searchState = homeState && StateUtils.get(homeState, 'search');
+  const modal = searchState && searchState.modal;
+  return {
+    filteredNews: searchNewsSelector(state),
+    modal: modal || undefined
+  };
+};
+
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
-    searchNews
+    searchNews,
+    onModalOpen: openModal,
+    onModalClose: closeModal,
+    addBookmark
   }, dispatch)
 );
 
-//ReduxとReactの橋渡しを行う
-// → この場合はNewsFeedコンポーネントにステート値＆ステート更新メソッドを渡す
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
